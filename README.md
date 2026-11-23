@@ -26,19 +26,10 @@
 
 ## 装了什么
 
-**命令 · 7 个**
-`/mail` 分派 · `/mail-install` 装 · `/mail-setup` 配 · `/mail-check` 体检 · `/mail-unread` 未读摘要 ·
-`/mail-send` 发信 · `/mail-reply` 回信
-
-**工具 · 11 个**
-`mail_accounts` `mail_check` `mail_folders` `mail_list` `mail_search` `mail_read`
-`mail_send` `mail_reply` `mail_attachment` `mail_flag` `mail_move`
-
-**技能 · 1 个**
-`zcode-mail`：链路事实、操作铁律、排错对照表，助手不必每次重新摸索
+一次安装得到 **7 个斜杠命令**、**11 个 MCP 工具**、**1 个技能**。明细折叠，用到再展开。
 
 <details>
-<summary><b>工具与命令明细</b></summary>
+<summary><b>命令 · 工具 · 技能明细</b></summary>
 
 **斜杠命令**
 
@@ -67,6 +58,8 @@
 | `mail_attachment` | 附件落盘到指定目录 |
 | `mail_flag` | 加/去 `\Seen` `\Flagged` `\Answered` `\Deleted` |
 | `mail_move` | 移动到指定文件夹（如 Trash） |
+
+**技能**：`zcode-mail` —— 链路事实、操作铁律、排错对照表，助手不必每次重新摸索。
 
 </details>
 

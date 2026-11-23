@@ -30,19 +30,10 @@ paste a password into the chat, and will **not** claim success without verifying
 
 ## What you get
 
-**7 commands**
-`/mail` dispatch · `/mail-install` install · `/mail-setup` configure · `/mail-check` health ·
-`/mail-unread` digest · `/mail-send` send · `/mail-reply` reply
-
-**11 tools**
-`mail_accounts` `mail_check` `mail_folders` `mail_list` `mail_search` `mail_read`
-`mail_send` `mail_reply` `mail_attachment` `mail_flag` `mail_move`
-
-**1 skill**
-`zcode-mail`: channel facts, operating rules, troubleshooting matrix
+One install gives you **7 slash commands**, **11 MCP tools** and **1 skill**. Details below, folded.
 
 <details>
-<summary><b>Command and tool reference</b></summary>
+<summary><b>Commands, tools and skill</b></summary>
 
 **Slash commands**
 
@@ -71,6 +62,9 @@ paste a password into the chat, and will **not** claim success without verifying
 | `mail_attachment` | Save an attachment to a local directory |
 | `mail_flag` | Add/remove `\Seen` `\Flagged` `\Answered` `\Deleted` |
 | `mail_move` | Move a message to another folder (e.g. Trash) |
+
+**Skill**: `zcode-mail` — channel facts, operating rules and a troubleshooting matrix, so the
+assistant does not re-derive them each time.
 
 </details>
 
