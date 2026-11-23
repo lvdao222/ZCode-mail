@@ -51,6 +51,32 @@
 
 ## 安装
 
+### 一行装（Windows PowerShell）
+
+```powershell
+irm https://raw.githubusercontent.com/lvdao222/ZCode-mail/main/install.ps1 | iex
+```
+
+装完**完全退出 ZCode 再打开**，`mail` MCP 工具与 `/mail` 系列命令即可用。
+
+脚本做的事：把仓库下载到 `~/.zcode/plugin-src/zcode-mail`，注册一个本地目录市场 `zcode-mail-github`，
+把插件文件落到 `~/.zcode/cli/plugins/cache/zcode-mail-github/zcode-mail/<version>`，
+并在三份状态文件里登记（改前自动备份为 `*.bak-zcode-mail-<时间戳>`）。
+
+```powershell
+# 顺带清掉旧版手写 config.json 里的裸 MCP 条目，避免两个同名 mail 服务并存
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/lvdao222/ZCode-mail/main/install.ps1))) -RemoveLegacyMcp
+
+# 卸载（移除市场、插件登记、缓存与源码目录，不动你的凭据）
+.\install.ps1 -Uninstall
+```
+
+> 说明：ZCode 桌面端目前没有面向普通用户的插件命令行，插件安装本身是 UI 流程。
+> 这个脚本是社区做法——直接按客户端状态文件格式登记，等价于你在界面里点"添加市场 → 安装"。
+> 状态文件格式若在后续版本变动，脚本可能失效，届时用下面的 UI 方式即可。
+
+### UI 方式（macOS / Linux 或脚本失效时）
+
 本仓库同时是一个插件市场清单（根目录的 `marketplace.json`）。
 
 1. ZCode → **设置 → 插件管理 → 发现 → `+`（添加插件市场）**

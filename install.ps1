@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     ZCode-mail 一行安装器（Windows PowerShell）
 
