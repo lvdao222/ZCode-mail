@@ -3,7 +3,7 @@
 [简体中文](README.md) | **English**
 
 An email plugin for [ZCode](https://zcode.z.ai): the assistant can **read, search, reply to and send
-mail, and save attachments** — directly. Python standard library only, zero dependencies, no `pip install`.
+mail, and save attachments** — directly. Python standard library only, zero dependencies, ready to use.
 
 > **Two channels.** Mail is received over IMAP. Sending prefers SMTP and falls back to the
 > **Gmail API over HTTPS 443** when SMTP ports are filtered — so the same credentials still send
@@ -32,8 +32,8 @@ paste a password into the chat, and will **not** claim success without verifying
 
 | | |
 |---|---|
-| **7 slash commands** | `/mail` dispatch · `/mail-install` install · `/mail-setup` configure · `/mail-check` health · `/mail-unread` digest · `/mail-send` send · `/mail-reply` reply |
-| **11 MCP tools** | `mail_accounts` `mail_check` `mail_folders` `mail_list` `mail_search` `mail_read` `mail_send` `mail_reply` `mail_attachment` `mail_flag` `mail_move` |
+| **7 commands** | `/mail` dispatch · `/mail-install` install · `/mail-setup` configure · `/mail-check` health · `/mail-unread` digest · `/mail-send` send · `/mail-reply` reply |
+| **11 tools** | `mail_accounts` `mail_check` `mail_folders` `mail_list` `mail_search` `mail_read` `mail_send` `mail_reply` `mail_attachment` `mail_flag` `mail_move` |
 | **1 skill** | `zcode-mail`: channel facts, operating rules, troubleshooting matrix |
 
 <details>

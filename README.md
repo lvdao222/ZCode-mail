@@ -3,7 +3,7 @@
 **简体中文** | [English](README.en.md)
 
 给 [ZCode](https://zcode.z.ai) 用的邮件插件：助手可以直接**读信、搜信、回信、发信、落盘附件**。
-纯 Python 标准库，零依赖，不用 `pip install` 任何东西。
+纯 Python 标准库，零依赖，装完即用。
 
 > **双通道发信**：收信走 IMAP；发信优先 SMTP，端口被网络拦截时自动改走 **Gmail API over HTTPS 443**。
 > 同一套账号密码，IMAP 通而 SMTP 不通的网络环境也能发信。
@@ -28,8 +28,8 @@
 
 | | |
 |---|---|
-| **7 个斜杠命令** | `/mail` 分派 · `/mail-install` 装 · `/mail-setup` 配 · `/mail-check` 体检 · `/mail-unread` 未读摘要 · `/mail-send` 发信 · `/mail-reply` 回信 |
-| **11 个 MCP 工具** | `mail_accounts` `mail_check` `mail_folders` `mail_list` `mail_search` `mail_read` `mail_send` `mail_reply` `mail_attachment` `mail_flag` `mail_move` |
+| **7 个命令** | `/mail` 分派 · `/mail-install` 装 · `/mail-setup` 配 · `/mail-check` 体检 · `/mail-unread` 未读摘要 · `/mail-send` 发信 · `/mail-reply` 回信 |
+| **11 个工具** | `mail_accounts` `mail_check` `mail_folders` `mail_list` `mail_search` `mail_read` `mail_send` `mail_reply` `mail_attachment` `mail_flag` `mail_move` |
 | **1 个技能** | `zcode-mail`：链路事实、操作铁律、排错对照表，助手不必每次重新摸索 |
 
 <details>
