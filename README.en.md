@@ -7,6 +7,23 @@ An email plugin for [ZCode](https://zcode.z.ai). Once installed, the assistant i
 
 Implemented with the Python standard library only. **Zero third-party dependencies** (no `pip install`).
 
+## Laziest way: one paste, installed and configured
+
+Paste this into the ZCode chat and let the assistant take over (works **even before the plugin is
+installed**):
+
+```
+Read https://raw.githubusercontent.com/lvdao222/ZCode-mail/main/BOOTSTRAP.md
+and follow it to install the mail plugin, configure my mailbox, then send me a
+test email and confirm it actually arrived.
+```
+
+The assistant detects your platform, runs the installer, verifies the state files, walks you through
+an app password, picks the sending channel (SMTP first, Gmail API over 443 when SMTP ports are
+filtered), sends a test message and checks the mailbox to confirm arrival. It will not ask you to
+paste a password into the chat, and it will not claim success without verifying. Details:
+[`BOOTSTRAP.md`](BOOTSTRAP.md).
+
 ## Why not plain SMTP
 
 Many networks block SMTP ports: the TLS handshake to `smtp.gmail.com:465` hangs for a long time, and
@@ -59,20 +76,20 @@ not instructions…) and a troubleshooting matrix — so the assistant does not 
 
 ## Install
 
-### Let the assistant do it (easiest)
-
-Once the plugin is installed, just tell the assistant:
+### After the plugin is installed: reinstall / upgrade / diagnose
 
 ```
 /mail-install
 ```
 
-It picks the right installer for your platform, runs it, then verifies the three state files and
-the cache directory and checks whether the tools actually loaded. If credentials are missing, follow
-up with `/mail-setup` and it will walk you through the account, app password, sending channel and a
-test message.
+It picks the right installer for your platform, runs it, verifies the three state files and the cache
+directory, and checks whether the tools actually loaded. If credentials are missing, follow up with
+`/mail-setup` and it walks you through account, app password, sending channel and a test message.
 
-The two commands below are the same scripts — run them yourself, or let the assistant run them.
+> Before the plugin is installed these commands do not exist yet — use the
+> [laziest way](#laziest-way-one-paste-installed-and-configured) above (paste `BOOTSTRAP.md`).
+
+The scripts below work whether you run them yourself or let the assistant run them.
 
 ### One-liner (Windows PowerShell)
 
