@@ -1,24 +1,26 @@
-﻿<#
+<#
 .SYNOPSIS
-    ZCode-mail 一行安装器（Windows PowerShell）
+    One-command installer for ZCode Mail (ZCode desktop plugin, Windows PowerShell).
 
 .DESCRIPTION
-    ZCode 桌面端目前没有面向普通用户的插件命令行，官方安装走 UI：
-    添加市场 -> 找到插件 -> 安装。本脚本把这三步等价地做完：
-    下载仓库 -> 落一份本地目录市场 -> 写入 ZCode 的插件状态文件。
+    The ZCode desktop app has no end-user plugin CLI: installing a plugin is a UI flow
+    (add marketplace -> open plugin -> install). This script performs the same steps
+    from the command line:
+        download repo -> register a local directory marketplace -> register the plugin
+        -> enable it in config.json
+    Every state file it touches is backed up first as *.bak-zcode-mail-<timestamp>.
 
-    写入前会自动备份三份状态文件（*.bak-zcode-mail-<时间戳>），
-    卸载用 -Uninstall 可精确还原。
+    The script is intentionally ASCII-only so it behaves the same whether PowerShell
+    reads it as UTF-8, UTF-8-with-BOM, or ANSI/GBK.
 
 .EXAMPLE
     irm https://raw.githubusercontent.com/lvdao222/ZCode-mail/main/install.ps1 | iex
 
 .EXAMPLE
-    # 同时清掉旧版裸 MCP 条目，避免两个同名 mail 服务并存
+    # Also drop a legacy hand-written MCP entry so two "mail" servers do not compete.
     & ([scriptblock]::Create((irm https://raw.githubusercontent.com/lvdao222/ZCode-mail/main/install.ps1))) -RemoveLegacyMcp
 
 .EXAMPLE
-    # 卸载
     .\install.ps1 -Uninstall
 #>
 [CmdletBinding()]
@@ -44,7 +46,7 @@ function Read-Json([string]$Path) {
 
 function Write-Json([string]$Path, $Object) {
     $json = $Object | ConvertTo-Json -Depth 32
-    $utf8 = New-Object System.Text.UTF8Encoding($false)   # 不写 BOM
+    $utf8 = New-Object System.Text.UTF8Encoding($false)   # no BOM
     $dir = Split-Path -Parent $Path
     if ($dir -and -not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
     [System.IO.File]::WriteAllText($Path, $json, $utf8)
@@ -54,7 +56,7 @@ function Backup-Json([string]$Path) {
     if (Test-Path $Path) {
         $bak = "$Path.bak-zcode-mail-$((Get-Date).ToString('yyyyMMddHHmmss'))"
         Copy-Item $Path $bak -Force
-        Write-Host "  备份 $bak" -ForegroundColor DarkGray
+        Write-Host "    backup: $bak" -ForegroundColor DarkGray
     }
 }
 
@@ -69,22 +71,24 @@ $cacheRoot = Join-Path $pluginsDir "cache\$MarketId"
 $pluginId = "$PluginName@$MarketId"
 
 if (-not (Test-Path $zcodeCli)) {
-    throw "未找到 ZCode 配置目录：$zcodeCli。请先安装并启动过一次 ZCode 桌面端。"
+    throw "ZCode config directory not found: $zcodeCli. Install and launch the ZCode desktop app at least once first."
 }
 
-Write-Host "`n=== ZCode Mail 安装器 ===" -ForegroundColor Cyan
-Write-Host "ZCode 配置目录: $zcodeCli"
+Write-Host ""
+Write-Host "=== ZCode Mail installer ===" -ForegroundColor Cyan
+Write-Host "    config dir: $zcodeCli"
 
-# ---------------------------------------------------------------- 卸载
+# ---------------------------------------------------------------- uninstall
 if ($Uninstall) {
-    Write-Host "`n[卸载] $pluginId" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "[uninstall] $pluginId" -ForegroundColor Yellow
 
     $installed = Read-Json $installedPath
     if ($installed -and $installed.plugins) {
         Backup-Json $installedPath
         $installed.plugins = @($installed.plugins | Where-Object { $_.id -ne $pluginId })
         Write-Json $installedPath $installed
-        Write-Host "  已从 installed_plugins.json 移除"
+        Write-Host "    removed from installed_plugins.json"
     }
 
     $known = Read-Json $knownPath
@@ -92,7 +96,7 @@ if ($Uninstall) {
         Backup-Json $knownPath
         $known.marketplaces = @($known.marketplaces | Where-Object { $_.id -ne $MarketId })
         Write-Json $knownPath $known
-        Write-Host "  已从 known_marketplaces.json 移除"
+        Write-Host "    removed from known_marketplaces.json"
     }
 
     $cfg = Read-Json $configPath
@@ -100,52 +104,58 @@ if ($Uninstall) {
         Backup-Json $configPath
         $cfg.plugins.enabledPlugins.PSObject.Properties.Remove($pluginId)
         Write-Json $configPath $cfg
-        Write-Host "  已从 config.json 的 enabledPlugins 移除"
+        Write-Host "    removed from config.json enabledPlugins"
     }
 
     foreach ($p in @($cacheRoot, $srcRoot)) {
-        if (Test-Path $p) { Remove-Item $p -Recurse -Force; Write-Host "  已删除 $p" }
+        if (Test-Path $p) { Remove-Item $p -Recurse -Force; Write-Host "    deleted: $p" }
     }
 
-    Write-Host "`n卸载完成。重启 ZCode 生效。" -ForegroundColor Green
+    Write-Host ""
+    Write-Host "Uninstalled. Restart ZCode to apply. Credentials are left untouched." -ForegroundColor Green
     return
 }
 
-# ---------------------------------------------------------------- 下载
+# ---------------------------------------------------------------- download
 $tmp = Join-Path ([System.IO.Path]::GetTempPath()) ("zcode-mail-" + [guid]::NewGuid().ToString("N"))
 New-Item -ItemType Directory -Path $tmp -Force | Out-Null
 $zip = Join-Path $tmp "repo.zip"
 $url = "https://codeload.github.com/$Repo/zip/refs/heads/$Branch"
 
-Write-Host "`n[1/4] 下载 $url" -ForegroundColor Yellow
+Write-Host ""
+Write-Host "[1/4] download $url" -ForegroundColor Yellow
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 Invoke-WebRequest -Uri $url -OutFile $zip -UseBasicParsing
 Expand-Archive -Path $zip -DestinationPath $tmp -Force
-$extracted = Get-ChildItem $tmp -Directory | Where-Object { Test-Path (Join-Path $_.FullName "marketplace.json") } | Select-Object -First 1
-if (-not $extracted) { throw "压缩包里没找到 marketplace.json，仓库结构异常。" }
-Write-Host "  解压到 $($extracted.FullName)"
+$extracted = Get-ChildItem $tmp -Directory |
+    Where-Object { Test-Path (Join-Path $_.FullName "marketplace.json") } |
+    Select-Object -First 1
+if (-not $extracted) { throw "marketplace.json not found in the downloaded archive; repository layout changed." }
+Write-Host "    extracted: $($extracted.FullName)" -ForegroundColor DarkGray
 
-# ---------------------------------------------------------------- 落盘
-Write-Host "`n[2/4] 安装插件文件" -ForegroundColor Yellow
+# ---------------------------------------------------------------- files
+Write-Host ""
+Write-Host "[2/4] install plugin files" -ForegroundColor Yellow
 if (Test-Path $srcRoot) { Remove-Item $srcRoot -Recurse -Force }
 New-Item -ItemType Directory -Path $srcRoot -Force | Out-Null
 Copy-Item (Join-Path $extracted.FullName "*") $srcRoot -Recurse -Force
-$stray = @("accounts.json", "token.json", "oauth_client.json")
-foreach ($s in $stray) {
-    $bad = Get-ChildItem $srcRoot -Recurse -Filter $s -ErrorAction SilentlyContinue
-    foreach ($b in $bad) { Remove-Item $b.FullName -Force }
+
+# never ship credentials even if someone committed them by accident
+foreach ($s in @("accounts.json", "token.json", "oauth_client.json")) {
+    Get-ChildItem $srcRoot -Recurse -Filter $s -ErrorAction SilentlyContinue |
+        ForEach-Object { Remove-Item $_.FullName -Force }
 }
 
-$marketFile = Join-Path $srcRoot "marketplace.json"
-$market = Read-Json $marketFile
+$market = Read-Json (Join-Path $srcRoot "marketplace.json")
 $ver = ($market.plugins | Where-Object { $_.name -eq $PluginName } | Select-Object -First 1).version
-if (-not $ver) { throw "marketplace.json 里找不到插件 $PluginName。" }
+if (-not $ver) { throw "plugin '$PluginName' not listed in marketplace.json." }
 
 $installPath = Join-Path $cacheRoot "$PluginName\$ver"
 if (Test-Path $installPath) { Remove-Item $installPath -Recurse -Force }
 New-Item -ItemType Directory -Path $installPath -Force | Out-Null
 Copy-Item (Join-Path $srcRoot $PluginName) $installPath -Recurse -Force
-# 兼容：插件内容可能直接位于版本目录下
+
+# flatten: plugin payload must sit directly under the version directory
 $inner = Join-Path $installPath $PluginName
 if (Test-Path (Join-Path $inner ".zcode-plugin")) {
     Get-ChildItem $inner -Force | Move-Item -Destination $installPath -Force
@@ -153,33 +163,38 @@ if (Test-Path (Join-Path $inner ".zcode-plugin")) {
 }
 Get-ChildItem $installPath -Recurse -Directory -Filter "__pycache__" -ErrorAction SilentlyContinue |
     ForEach-Object { Remove-Item $_.FullName -Recurse -Force }
-Write-Host "  $installPath" -ForegroundColor DarkGray
+Write-Host "    $installPath" -ForegroundColor DarkGray
 
-# ---------------------------------------------------------------- 写状态
-Write-Host "`n[3/4] 注册市场与插件" -ForegroundColor Yellow
+# ---------------------------------------------------------------- state
+Write-Host ""
+Write-Host "[3/4] register marketplace and plugin" -ForegroundColor Yellow
 $stamp = Get-ZStamp
 
 $known = Read-Json $knownPath
 if (-not $known) { $known = [pscustomobject]@{ version = 1; marketplaces = @() } }
-if (-not $known.marketplaces) { $known | Add-Member -NotePropertyName marketplaces -NotePropertyValue @() -Force }
+if (-not $known.marketplaces) {
+    $known | Add-Member -NotePropertyName marketplaces -NotePropertyValue @() -Force
+}
 Backup-Json $knownPath
 $known.marketplaces = @($known.marketplaces | Where-Object { $_.id -ne $MarketId })
 $known.marketplaces += [pscustomobject]@{
     id                 = $MarketId
     source             = [pscustomobject]@{ source = "directory"; path = $srcRoot }
     name               = $MarketId
-    description        = "ZCode Mail（由 install.ps1 注册的本地目录市场）"
+    description        = "ZCode Mail (local directory marketplace registered by install.ps1)"
     addedAt            = $stamp
     lastUpdated        = $stamp
     pluginCount        = 1
     cacheTransactionId = [guid]::NewGuid().ToString()
 }
 Write-Json $knownPath $known
-Write-Host "  known_marketplaces.json <- $MarketId"
+Write-Host "    known_marketplaces.json <- $MarketId"
 
 $installed = Read-Json $installedPath
 if (-not $installed) { $installed = [pscustomobject]@{ version = 1; plugins = @() } }
-if (-not $installed.plugins) { $installed | Add-Member -NotePropertyName plugins -NotePropertyValue @() -Force }
+if (-not $installed.plugins) {
+    $installed | Add-Member -NotePropertyName plugins -NotePropertyValue @() -Force
+}
 Backup-Json $installedPath
 $old = $installed.plugins | Where-Object { $_.id -eq $pluginId } | Select-Object -First 1
 $installed.plugins = @($installed.plugins | Where-Object { $_.id -ne $pluginId })
@@ -196,12 +211,14 @@ $installed.plugins += [pscustomobject]@{
     cacheTransactionId = [guid]::NewGuid().ToString()
 }
 Write-Json $installedPath $installed
-Write-Host "  installed_plugins.json <- $pluginId ($ver)"
+Write-Host "    installed_plugins.json <- $pluginId ($ver)"
 
 $cfg = Read-Json $configPath
 if ($cfg) {
     Backup-Json $configPath
-    if (-not $cfg.plugins) { $cfg | Add-Member -NotePropertyName plugins -NotePropertyValue ([pscustomobject]@{}) -Force }
+    if (-not $cfg.plugins) {
+        $cfg | Add-Member -NotePropertyName plugins -NotePropertyValue ([pscustomobject]@{}) -Force
+    }
     if (-not $cfg.plugins.enabledPlugins) {
         $cfg.plugins | Add-Member -NotePropertyName enabledPlugins -NotePropertyValue ([pscustomobject]@{}) -Force
     }
@@ -212,29 +229,32 @@ if ($cfg) {
 
     if ($RemoveLegacyMcp -and $cfg.mcp -and $cfg.mcp.servers -and $cfg.mcp.servers.PSObject.Properties["mail"]) {
         $cfg.mcp.servers.PSObject.Properties.Remove("mail")
-        Write-Host "  已移除旧版裸 MCP 条目 mcp.servers.mail（避免与插件同名冲突）" -ForegroundColor DarkYellow
+        Write-Host "    removed legacy mcp.servers.mail entry (avoids clashing with the plugin)" -ForegroundColor DarkYellow
     }
 
     Write-Json $configPath $cfg
-    Write-Host "  config.json <- enabledPlugins[$pluginId] = true"
+    Write-Host "    config.json <- enabledPlugins[$pluginId] = true"
 }
 
 Remove-Item $tmp -Recurse -Force -ErrorAction SilentlyContinue
 
-# ---------------------------------------------------------------- 收尾
-Write-Host "`n[4/4] 完成" -ForegroundColor Green
+# ---------------------------------------------------------------- done
+Write-Host ""
+Write-Host "[4/4] done" -ForegroundColor Green
 Write-Host @"
 
-  插件:     $pluginId
-  版本:     $ver
-  安装路径: $installPath
+    plugin:     $pluginId
+    version:    $ver
+    installed:  $installPath
 
-下一步：
-  1. 完全退出 ZCode 后重新打开（插件与 MCP 服务在启动时加载）
-  2. Settings -> Plugin Management 里应能看到已启用的 ZCode Mail
-  3. 新会话里输入 /mail-check 验证
+Next:
+    1. Fully quit ZCode and start it again (plugins and MCP servers load at startup).
+    2. Settings -> Plugin Management should list ZCode Mail as enabled.
+    3. Try /mail-check in a new session.
 
-凭据（应用专用密码 / OAuth 令牌）不随仓库分发，首次使用按 README 配置到插件数据目录。
-卸载：.\install.ps1 -Uninstall
+Credentials (app password / OAuth token) are not shipped with the repo. Configure them
+into the plugin data directory as described in README (section "Configuration").
+
+Uninstall: .\install.ps1 -Uninstall
 
 "@ -ForegroundColor Gray
