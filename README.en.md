@@ -72,12 +72,12 @@ assistant does not re-derive them each time.
 
 ## Install
 
-| Route | Command | Platform |
-|---|---|---|
-| Let the assistant do it | paste the Quick start block | laziest, recommended |
-| One-liner | `irm https://raw.githubusercontent.com/lvdao222/ZCode-mail/main/install.ps1 \| iex` | Windows |
-| One-liner | `curl -fsSL https://raw.githubusercontent.com/lvdao222/ZCode-mail/main/install.sh \| bash` | macOS / Linux |
-| UI | Settings → Plugin Management → Discover → `+` → `https://github.com/lvdao222/ZCode-mail` → Install | fallback |
+| Route | How |
+|---|---|
+| Assistant | paste the Quick start block — the easiest way |
+| Windows | `irm https://raw.githubusercontent.com/lvdao222/ZCode-mail/main/install.ps1 \| iex` |
+| macOS / Linux | `curl -fsSL https://raw.githubusercontent.com/lvdao222/ZCode-mail/main/install.sh \| bash` |
+| UI | Settings → Plugin Management → Discover → `+` → `https://github.com/lvdao222/ZCode-mail` → Install |
 
 What the scripts do: download the repo → register a local directory marketplace `zcode-mail-github` →
 copy the plugin → record it in three state files (each backed up first).

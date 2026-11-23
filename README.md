@@ -67,12 +67,12 @@
 
 ## 安装
 
-| 方式 | 命令 | 适用 |
-|---|---|---|
-| 让助理装 | 粘上面「快速开始」那段 | 最懒，推荐 |
-| 一行装 | `irm https://raw.githubusercontent.com/lvdao222/ZCode-mail/main/install.ps1 \| iex` | Windows |
-| 一行装 | `curl -fsSL https://raw.githubusercontent.com/lvdao222/ZCode-mail/main/install.sh \| bash` | macOS / Linux |
-| 界面装 | 设置 → 插件管理 → 发现 → `+` → 填 `https://github.com/lvdao222/ZCode-mail` → 安装 | 脚本失效时兜底 |
+| 方式 | 怎么装 |
+|---|---|
+| 助理 | 粘上面「快速开始」那段，最省事 |
+| Windows | `irm https://raw.githubusercontent.com/lvdao222/ZCode-mail/main/install.ps1 \| iex` |
+| macOS / Linux | `curl -fsSL https://raw.githubusercontent.com/lvdao222/ZCode-mail/main/install.sh \| bash` |
+| 界面 | 设置 → 插件管理 → 发现 → `+` → 填 `https://github.com/lvdao222/ZCode-mail` → 安装 |
 
 脚本做的事：下载仓库 → 注册本地目录市场 `zcode-mail-github` → 落插件 → 登记三份状态文件（改前自动备份）。
 
