@@ -186,6 +186,11 @@ if [ -d "$INSTALL_PATH/$PLUGIN_NAME/.zcode-plugin" ]; then
 fi
 find "$INSTALL_PATH" -type d -name __pycache__ -prune -exec rm -rf {} + 2>/dev/null || true
 chmod +x "$INSTALL_PATH/mcp/"*.py 2>/dev/null || true
+
+# prune older versions of this plugin so only the installed one remains
+find "$CACHE_ROOT/$PLUGIN_NAME" -mindepth 1 -maxdepth 1 -type d ! -name "$VER" -print0 2>/dev/null |
+  while IFS= read -r -d '' old; do rm -rf "$old"; echo "    pruned old version: $(basename "$old")"; done
+
 echo "    $INSTALL_PATH"
 
 # ------------------------------------------------------------------ state

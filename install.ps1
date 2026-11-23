@@ -163,6 +163,12 @@ if (Test-Path (Join-Path $inner ".zcode-plugin")) {
 }
 Get-ChildItem $installPath -Recurse -Directory -Filter "__pycache__" -ErrorAction SilentlyContinue |
     ForEach-Object { Remove-Item $_.FullName -Recurse -Force }
+
+# prune older versions of this plugin so only the installed one remains
+Get-ChildItem (Join-Path $cacheRoot $PluginName) -Directory -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -ne $ver } |
+    ForEach-Object { Remove-Item $_.FullName -Recurse -Force; Write-Host "    pruned old version: $($_.Name)" -ForegroundColor DarkGray }
+
 Write-Host "    $installPath" -ForegroundColor DarkGray
 
 # ---------------------------------------------------------------- state
