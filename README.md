@@ -1,5 +1,7 @@
 # ZCode-mail
 
+**简体中文** | [English](README.en.md)
+
 给 [ZCode](https://zcode.z.ai) 用的邮件插件。装好之后，ZCode 里的助手可以直接**读信、搜信、回信、发信、落盘附件**。
 
 纯 Python 标准库实现，**零第三方依赖**（不需要 `pip install` 任何东西）。
@@ -21,7 +23,7 @@
 
 ## 能力
 
-**MCP 工具**（`mcp__mail__*`）
+**MCP 工具**（插件形态下为 `mcp__plugin_zcode-mail_mail__*`，裸挂 MCP 时为 `mcp__mail__*`）
 
 | 工具 | 说明 |
 |---|---|
@@ -82,7 +84,7 @@ irm https://raw.githubusercontent.com/lvdao222/ZCode-mail/main/install.ps1 | iex
 1. ZCode → **设置 → 插件管理 → 发现 → `+`（添加插件市场）**
 2. 填入本仓库地址：`https://github.com/lvdao222/ZCode-mail`
 3. 在市场里找到 **ZCode 邮件通道** → **安装**
-4. 新开一个会话（或重连一次 MCP），`mcp__mail__*` 工具才会出现
+4. 新开一个会话（或重连一次 MCP），`mail` 相关工具才会出现
 
 也可以用本地目录方式：把仓库 clone 下来，添加市场时填 clone 后的目录路径。
 
