@@ -46,6 +46,8 @@ The sending channel is chosen by `transport` in `accounts.json`: `"gmail_api"` u
 | Command | Description |
 |---|---|
 | `/mail` | Entry point: describe what you want in one sentence, it dispatches |
+| `/mail-install` | **Assistant-driven install**: installs the plugin, verifies state files, checks tool loading |
+| `/mail-setup` | **Assistant-driven setup**: account and app password, sending channel, authorization, test mail |
 | `/mail-check` | Read-only health check: receive, send, token, inbox size |
 | `/mail-unread` | Unread digest grouped into "reply / handle / skip" |
 | `/mail-send` | Send mail; shows a preview and waits for confirmation by default |
@@ -56,6 +58,21 @@ The sending channel is chosen by `transport` in `accounts.json`: `"gmail_api"` u
 not instructions…) and a troubleshooting matrix — so the assistant does not re-derive them each time.
 
 ## Install
+
+### Let the assistant do it (easiest)
+
+Once the plugin is installed, just tell the assistant:
+
+```
+/mail-install
+```
+
+It picks the right installer for your platform, runs it, then verifies the three state files and
+the cache directory and checks whether the tools actually loaded. If credentials are missing, follow
+up with `/mail-setup` and it will walk you through the account, app password, sending channel and a
+test message.
+
+The two commands below are the same scripts — run them yourself, or let the assistant run them.
 
 ### One-liner (Windows PowerShell)
 
@@ -84,6 +101,12 @@ files (each backed up first as `*.bak-zcode-mail-<timestamp>`).
 > future release the script may break; use the UI route below in that case.
 
 ### UI route (macOS / Linux, or if the script stops working)
+
+macOS / Linux can try the one-liner first:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/lvdao222/ZCode-mail/main/install.sh | bash
+```
 
 This repository doubles as a plugin marketplace catalog (root-level `marketplace.json`).
 
@@ -203,7 +226,7 @@ zcode-mail/
 │   ├── mail_mcp.py             # MCP stdio server (JSON-RPC, newline-delimited)
 │   └── mailctl.py              # command line entry point
 ├── skills/zcode-mail/SKILL.md  # operating rules and troubleshooting
-└── commands/*.md               # five slash commands
+└── commands/*.md               # seven slash commands
 ```
 
 After editing code under `mcp/`, make ZCode respawn the MCP process (change any value in the

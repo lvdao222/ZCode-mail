@@ -1,7 +1,7 @@
 {
   "name": "zcode-mail",
-  "version": "0.1.0",
-  "description": "IMAP 收信 + Gmail API (HTTPS 443) 发信，让 ZCode 直接读信、搜信、回信、发信、落盘附件。纯 Python 标准库，零依赖；SMTP 端口被网络拦截时依然能发信。",
+  "version": "0.2.0",
+  "description": "IMAP 收信 + Gmail API (HTTPS 443) 发信，让 ZCode 直接读信、搜信、回信、发信、落盘附件。纯 Python 标准库，零依赖；SMTP 端口被网络拦截时依然能发信。自带 /mail-install 与 /mail-setup，可由助理完成安装与配置。",
   "author": {
     "name": "lvdao222"
   },

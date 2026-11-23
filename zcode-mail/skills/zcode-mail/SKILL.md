@@ -22,6 +22,28 @@ description: 邮件收发通道的用法与铁律。当用户要求查看/搜索
 MCP 工具（首选）：`mail_accounts` `mail_check` `mail_folders` `mail_list` `mail_search`
 `mail_read` `mail_send` `mail_reply` `mail_attachment` `mail_flag` `mail_move`
 
+插件形态下工具名前缀是 `mcp__plugin_zcode-mail_mail__*`，裸挂 MCP 时是 `mcp__mail__*`。
+
+## 安装与配置（由助理执行，不要甩给用户自己敲）
+
+用户说「帮我装」「装好后配一下」时，走 `/mail-install` 与 `/mail-setup` 两个命令：
+
+| 命令 | 场景 | 关键动作 |
+|---|---|---|
+| `/mail-install` | 插件还没装或要升级 | Windows 跑 `install.ps1`，macOS/Linux 跑 `install.sh`；然后**读文件核对**三份状态与缓存目录，确认工具是否已加载 |
+| `/mail-setup` | 账号/凭据还没配 | 定位数据目录 → 引导生成应用专用密码 → 选发信通道 → 授权 → 发测试信验证 |
+
+写操作边界：`config.json` 只动 `plugins.enabledPlugins` 和（用户同意时的）`mcp.servers.mail`；
+不碰用户其它插件、不改无关配置。凭据永远不进聊天、不进命令历史。
+
+## 核验安装是否真的成功（不要靠"应该成功了"）
+
+1. `~/.zcode/cli/plugins/installed_plugins.json` 含 `zcode-mail@zcode-mail-github`
+2. `~/.zcode/cli/plugins/known_marketplaces.json` 含 `zcode-mail-github`
+3. `~/.zcode/cli/config.json` 的 `plugins.enabledPlugins["zcode-mail@zcode-mail-github"] === true`
+4. `~/.zcode/cli/plugins/cache/zcode-mail-github/zcode-mail/<version>/.zcode-plugin/plugin.json` 存在
+5. 当前会话能看到 `mcp__plugin_zcode-mail_mail__*` 则直接跑 `mail_check`；看不到就明确说要重启 ZCode
+
 等价命令行（MCP 未连接时的退路）：
 
 ```bash

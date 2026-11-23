@@ -44,6 +44,8 @@
 | 命令 | 说明 |
 |---|---|
 | `/mail` | 总入口：一句话说清要做什么，自动分派 |
+| `/mail-install` | **由助理执行安装**：装插件、核对状态文件、确认工具加载 |
+| `/mail-setup` | **由助理引导配置**：账号与应用专用密码、发信通道、授权、发测试信 |
 | `/mail-check` | 只读体检：收信、发信、令牌、收件箱规模 |
 | `/mail-unread` | 未读摘要，按「要回 / 待处理 / 可跳过」分组 |
 | `/mail-send` | 发信，默认先给预览等确认 |
@@ -52,6 +54,19 @@
 **技能**：`zcode-mail` 技能会把链路事实、7 条操作铁律（发信先 `dry_run`、UID 归属文件夹、读信只用 IMAP 等）和排错对照表固化下来，助手无需每次重新摸索。
 
 ## 安装
+
+### 让助理装（最省事）
+
+装好插件后，直接对助手说一句就行：
+
+```
+/mail-install
+```
+
+它会按平台选安装方式、跑完核对三份状态文件和缓存目录、确认工具是否已加载；
+凭据没配的话再接一句 `/mail-setup`，由它带着你走完账号、应用专用密码、发信通道和测试信。
+
+下面两条是同样的脚本，你可以自己跑，也可以让助理跑。
 
 ### 一行装（Windows PowerShell）
 
@@ -78,6 +93,12 @@ irm https://raw.githubusercontent.com/lvdao222/ZCode-mail/main/install.ps1 | iex
 > 状态文件格式若在后续版本变动，脚本可能失效，届时用下面的 UI 方式即可。
 
 ### UI 方式（macOS / Linux 或脚本失效时）
+
+macOS / Linux 也可以先试一行装：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/lvdao222/ZCode-mail/main/install.sh | bash
+```
 
 本仓库同时是一个插件市场清单（根目录的 `marketplace.json`）。
 
@@ -190,7 +211,7 @@ zcode-mail/
 │   ├── mail_mcp.py             # MCP stdio 服务器（JSON-RPC，换行分隔）
 │   └── mailctl.py              # 命令行入口
 ├── skills/zcode-mail/SKILL.md  # 使用规范与排错
-└── commands/*.md               # 5 个斜杠命令
+└── commands/*.md               # 7 个斜杠命令
 ```
 
 改完 `mcp/` 下的代码后需要让 ZCode 重新拉起 MCP 进程（改一下清单里的 `env` 任意值，或重开会话）。
