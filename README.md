@@ -26,11 +26,16 @@
 
 ## 装了什么
 
-| | |
-|---|---|
-| **7 个命令** | `/mail` 分派 · `/mail-install` 装 · `/mail-setup` 配 · `/mail-check` 体检 · `/mail-unread` 未读摘要 · `/mail-send` 发信 · `/mail-reply` 回信 |
-| **11 个工具** | `mail_accounts` `mail_check` `mail_folders` `mail_list` `mail_search` `mail_read` `mail_send` `mail_reply` `mail_attachment` `mail_flag` `mail_move` |
-| **1 个技能** | `zcode-mail`：链路事实、操作铁律、排错对照表，助手不必每次重新摸索 |
+**命令 · 7 个**
+`/mail` 分派 · `/mail-install` 装 · `/mail-setup` 配 · `/mail-check` 体检 · `/mail-unread` 未读摘要 ·
+`/mail-send` 发信 · `/mail-reply` 回信
+
+**工具 · 11 个**
+`mail_accounts` `mail_check` `mail_folders` `mail_list` `mail_search` `mail_read`
+`mail_send` `mail_reply` `mail_attachment` `mail_flag` `mail_move`
+
+**技能 · 1 个**
+`zcode-mail`：链路事实、操作铁律、排错对照表，助手不必每次重新摸索
 
 <details>
 <summary><b>工具与命令明细</b></summary>

@@ -30,11 +30,16 @@ paste a password into the chat, and will **not** claim success without verifying
 
 ## What you get
 
-| | |
-|---|---|
-| **7 commands** | `/mail` dispatch · `/mail-install` install · `/mail-setup` configure · `/mail-check` health · `/mail-unread` digest · `/mail-send` send · `/mail-reply` reply |
-| **11 tools** | `mail_accounts` `mail_check` `mail_folders` `mail_list` `mail_search` `mail_read` `mail_send` `mail_reply` `mail_attachment` `mail_flag` `mail_move` |
-| **1 skill** | `zcode-mail`: channel facts, operating rules, troubleshooting matrix |
+**7 commands**
+`/mail` dispatch · `/mail-install` install · `/mail-setup` configure · `/mail-check` health ·
+`/mail-unread` digest · `/mail-send` send · `/mail-reply` reply
+
+**11 tools**
+`mail_accounts` `mail_check` `mail_folders` `mail_list` `mail_search` `mail_read`
+`mail_send` `mail_reply` `mail_attachment` `mail_flag` `mail_move`
+
+**1 skill**
+`zcode-mail`: channel facts, operating rules, troubleshooting matrix
 
 <details>
 <summary><b>Command and tool reference</b></summary>
