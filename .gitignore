@@ -1,0 +1,27 @@
+# 凭据：绝不提交
+accounts.json
+token.json
+oauth_client.json
+credentials.json
+*.token
+.env
+.env.*
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 运行产物
+*.log
+downloads/
+tmp/

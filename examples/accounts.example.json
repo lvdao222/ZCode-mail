@@ -1,0 +1,31 @@
+{
+  "default_account": "main",
+  "accounts": {
+    "main": {
+      "address": "you@qq.com",
+      "username": "you@qq.com",
+      "display_name": "你的名字",
+      "password_env": "MAIL_PASS",
+      "imap_host": "imap.qq.com",
+      "imap_port": 993,
+      "imap_ssl": true,
+      "smtp_host": "smtp.qq.com",
+      "smtp_port": 465,
+      "smtp_ssl": true,
+      "transport": "smtp"
+    },
+    "gmail_api_example": {
+      "address": "you@gmail.com",
+      "username": "you@gmail.com",
+      "display_name": "Gmail",
+      "password": "十六位应用专用密码（收信走 IMAP 用）",
+      "imap_host": "imap.gmail.com",
+      "imap_port": 993,
+      "imap_ssl": true,
+      "smtp_host": "smtp.gmail.com",
+      "smtp_port": 465,
+      "smtp_ssl": true,
+      "transport": "gmail_api"
+    }
+  }
+}
